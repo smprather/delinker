@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "delinker"
+version = "0.1.0"
+description = "Recursively replace symlinks with copies of the files and directories they point to"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+keywords = ["symlink", "filesystem", "cli"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+]
+
+[project.scripts]
+delinker = "delinker:main"
+
+[project.urls]
+Homepage = "https://github.com/smprather/delinker"
+Repository = "https://github.com/smprather/delinker"
+Issues = "https://github.com/smprather/delinker/issues"
+
+[tool.setuptools]
+py-modules = ["delinker"]
