@@ -6,18 +6,46 @@ It keeps scanning until no resolvable symlinks remain. Broken or otherwise unres
 
 The CLI is built with `rich-click`, so `--help` output is rendered with Rich formatting.
 
-## Install
+## Requirements
 
-From the GitHub repo:
+- Python 3.10+
+- [uv](https://docs.astral.sh/uv/)
+
+## Use With uv
+
+Run from a cloned checkout without manually activating a virtualenv:
 
 ```bash
-pip install git+https://github.com/smprather/delinker.git
+uv sync
+uv run delinker --help
+uv run delinker /path/to/tree
 ```
 
-For local development:
+Run the script entrypoint directly through `uv`:
 
 ```bash
-pip install -e .
+uv run python delinker.py /path/to/tree
+```
+
+## Install As a Tool
+
+Install from GitHub as a standalone CLI:
+
+```bash
+uv tool install git+https://github.com/smprather/delinker.git
+```
+
+Upgrade an existing tool install:
+
+```bash
+uv tool install --upgrade git+https://github.com/smprather/delinker.git
+```
+
+## Development
+
+```bash
+uv sync
+uv run delinker --help
 ```
 
 ## Usage
@@ -26,16 +54,16 @@ pip install -e .
 delinker /path/to/tree
 ```
 
-You can also run it directly from the repo:
+From the repo with `uv`:
 
 ```bash
-python delinker.py /path/to/tree
+uv run delinker /path/to/tree
 ```
 
 Show help:
 
 ```bash
-delinker --help
+uv run delinker --help
 ```
 
 ## Behavior
@@ -70,3 +98,5 @@ work/
 ## Notes
 
 `delinker` modifies the target tree in place. Run it on a copy first if you need a reversible workflow.
+
+See [DEVELOPMENT.md](/home/myles/delinker/DEVELOPMENT.md) for contributor workflow details and [AGENTS.md](/home/myles/delinker/AGENTS.md) for repo-specific guidance for coding agents.
