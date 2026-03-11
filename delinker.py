@@ -2,21 +2,13 @@
 
 from __future__ import annotations
 
-import argparse
 import shutil
-import sys
 from pathlib import Path
 
+import rich_click as click
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Replace symlinks under a directory with copies of their final targets. "
-            "Broken or unresolved symlinks are reported and skipped."
-        )
-    )
-    parser.add_argument("directory", type=Path, help="Directory tree to delink")
-    return parser.parse_args()
+
+CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
 
 def find_symlinks(root: Path) -> list[Path]:
@@ -31,10 +23,10 @@ def find_symlinks(root: Path) -> list[Path]:
 
 def report_unresolved(link: Path, exc: Exception, destination: Path | None = None) -> None:
     if destination is None or destination == link:
-        print(f"Skipping unresolved symlink: {link} ({exc})")
+        click.echo(f"Skipping unresolved symlink: {link} ({exc})")
         return
 
-    print(f"Skipping unresolved symlink: {link} (would materialize at {destination}: {exc})")
+    click.echo(f"Skipping unresolved symlink: {link} (would materialize at {destination}: {exc})")
 
 
 def materialize_path(
@@ -110,27 +102,20 @@ def delink_tree(root: Path) -> tuple[int, int]:
     return replaced, len(unresolved_links)
 
 
-def main() -> int:
-    args = parse_args()
-
-    try:
-        root = args.directory.resolve(strict=True)
-    except FileNotFoundError:
-        print(f"Directory does not exist: {args.directory}", file=sys.stderr)
-        return 2
-
-    if not root.is_dir():
-        print(f"Not a directory: {root}", file=sys.stderr)
-        return 2
-
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument(
+    "directory",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True, path_type=Path, resolve_path=True),
+)
+def main(directory: Path) -> None:
+    """Replace symlinks under DIRECTORY with copies of their targets."""
+    root = directory.resolve(strict=True)
     replaced, unresolved = delink_tree(root)
-    print(f"Replaced {replaced} symlink(s)")
+    click.echo(f"Replaced {replaced} symlink(s)")
 
     if unresolved:
-        print(f"Skipped {unresolved} unresolved symlink(s)")
-
-    return 0
+        click.echo(f"Skipped {unresolved} unresolved symlink(s)")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

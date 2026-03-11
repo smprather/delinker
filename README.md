@@ -4,6 +4,8 @@
 
 It keeps scanning until no resolvable symlinks remain. Broken or otherwise unresolved symlinks are left in place and reported to stdout.
 
+The CLI is built with `rich-click`, so `--help` output is rendered with Rich formatting.
+
 ## Install
 
 From the GitHub repo:
@@ -28,6 +30,12 @@ You can also run it directly from the repo:
 
 ```bash
 python delinker.py /path/to/tree
+```
+
+Show help:
+
+```bash
+delinker --help
 ```
 
 ## Behavior
